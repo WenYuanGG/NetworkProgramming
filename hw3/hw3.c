@@ -15,10 +15,13 @@ char *message[MAXTHREADS+1] = {
 void *Hello(void *pthreadid){
 	// Get id from the dynamic memory
 	int id = *(int*)pthreadid;
+
 	// Release the dynamic memory
 	free(pthreadid);
 
 	printf("My Thread's ID [%d] %s\n", id, message[id]);
+
+	return 0;
 }
 
 int main(int argc, char *argv[]){

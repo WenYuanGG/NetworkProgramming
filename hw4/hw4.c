@@ -16,10 +16,10 @@ int main(int argc, char *argv[]){
 	int server_fd; 
 	int client_fd; 
 	struct sockaddr_in server_addr; 
-	struct sockaddr_in client_addr; 
+	struct sockaddr_in client_addr;
 	fd_set master_fds; 
-	fd_set read_fds; 
-	int fdmax; 
+	fd_set read_fds;
+	int fdmax;
 	struct timeval tv; 
 	int port;
 	int len;
@@ -96,10 +96,10 @@ int main(int argc, char *argv[]){
 			if (FD_ISSET(i,&read_fds)) { 
 
 				// Handle new connection
-				if (i==server_fd) {
+				if (i == server_fd) {
 				//當i等於server_fd時代表有client要連線
 					len = sizeof(client_addr);
-					if ((client_fd=accept(server_fd,(struct sockaddr *)&client_addr,(socklen_t*)&len)) == -1) {
+					if ((client_fd = accept(server_fd,(struct sockaddr *)&client_addr,(socklen_t*)&len)) == -1) {
 					//接受client端的連線，並回傳一個client_fd
 						perror("accept");
 						continue;
