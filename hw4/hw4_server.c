@@ -12,28 +12,33 @@
 #define PANIC(msg) { perror(msg); exit(-1); }
 #define STDIN 0
 
+void setup_signal(){
+	// Used to handle SIGPIPE
+	struct sigaction action;
+	action.sa_handler = SIG_IGN;
+	if(sigaction(SIGPIPE, &action, 0) != 0)
+		PANIC("sigaction");
+}
+
 int main(int argc, char *argv[]){
-	int server_fd; 
-	int client_fd; 
-	struct sockaddr_in server_addr; 
+	int server_fd;
+	int client_fd;
+	struct sockaddr_in server_addr;
 	struct sockaddr_in client_addr;
-	fd_set master_fds; 
+	fd_set master_fds;
 	fd_set read_fds;
 	int fdmax;
 	struct timeval tv; 
 	int port;
 	int len;
 	int i, j;
-	char buf[256]; 
+	char buf[256];
 	int nbytes;
 	int yes = 1;
 	int retval;
 
-	// Used to handle signal pipe
-	struct sigaction action;
-	action.sa_handler = SIG_IGN;
-	sigaction(SIGPIPE, &action, 0);
-	
+	setup_signal();
+
 	// Set port number
 	if(argc > 1) port = atoi(argv[1]);
 	else port = 9999;
@@ -120,10 +125,10 @@ int main(int argc, char *argv[]){
 
 					// Read Data into buf
 					if ((nbytes=read(i, buf, sizeof(buf))) > 0) {
-						write(0,buf,nbytes); //再把buf的資料寫到console
+						write(0, buf,nbytes); //再把buf的資料寫到console
 						for(j=0; j<=fdmax; j++) {
 							if (FD_ISSET(j, &master_fds))
-								if (j!=server_fd && j!=i &&j!=0) 
+								if (j!=server_fd && j!=i && j!=0) 
 								//除了自己、STDIN、送資料的client以外
 								//其他的client都要送一份
 									if (send(j, buf, nbytes, 0) == -1)
