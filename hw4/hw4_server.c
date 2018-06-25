@@ -12,10 +12,15 @@
 #define PANIC(msg) { perror(msg); exit(-1); }
 #define STDIN 0
 
-void setup_signal(){
+static void sig_pipe(int signum){
+	char buf[] = "Broken Pipe!\n";
+	write(1, buf, sizeof(buf));
+}
+
+static void setup_signal(){
 	// Used to handle SIGPIPE
 	struct sigaction action;
-	action.sa_handler = SIG_IGN;
+	action.sa_handler = sig_pipe;
 	if(sigaction(SIGPIPE, &action, 0) != 0)
 		PANIC("sigaction");
 }
