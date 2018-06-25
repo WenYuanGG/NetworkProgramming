@@ -16,21 +16,6 @@ void PANIC(char* msg);
 
 #define PANIC(msg){perror(msg); exit(-1);}
 
-/*
-static void sig_handler(int sig){
-	if(sig == SIGPIPE){
-		char buf_sigpipe[] = "Catch a SIGPIPE\n";
-		write(0, buf_sigpipe, sizeof(buf_sigpipe));
-	}
-	else if(sig == SIGCHLD){
-		//int exit_status;
-		char buf_sigchld[] = "Catch a SIGCHLD\n";
-		write(0, buf_sigchld, sizeof(buf_sigchld));
-		//wait(&exit_status);
-	}
-}
-*/
-
 void http(struct sockaddr_in *client_addr){
 	char buffer[1512];
 	char port[10];
@@ -51,7 +36,6 @@ void http(struct sockaddr_in *client_addr){
 int main(int argc, char *argv[]){
 	int sd;
 	int port;
-	int state;
 	int yes = 1;
 	int new_fd;
 	socklen_t len;
@@ -101,7 +85,6 @@ int main(int argc, char *argv[]){
 
 				http(&client_addr);
 
-				wait(&state);
 				exit(0);
 			}
 			close(new_fd);
